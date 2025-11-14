@@ -1,0 +1,182 @@
+/* Design tokens */
+:root {
+  --blue-900: #0b1e59;
+  --blue-800: #153e75;
+  --blue-700: #1d4ed8; /* primary */
+  --blue-600: #2563eb;
+  --blue-500: #3b82f6;
+  --blue-100: #dbeafe;
+  --surface: #ffffff;
+  --background: #f8fafc;
+  --text: #0f172a;
+  --muted: #334155;
+  --border: #e2e8f0;
+  --shadow: 0 10px 30px rgba(29, 78, 216, 0.15);
+  --radius: 14px;
+}
+
+/* Base */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text);
+  background: var(--background);
+  line-height: 1.6;
+}
+img, svg { max-width: 100%; display: block; }
+
+/* Accessibility: focus visible */
+:where(a, button, input, select, textarea).focus-visible,
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid var(--blue-500);
+  outline-offset: 2px;
+}
+
+/* Skip link utility */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #fff;
+  color: var(--blue-700);
+  padding: .6rem .9rem;
+  border: 2px solid var(--blue-700);
+  border-radius: 8px;
+  z-index: 1000;
+}
+.skip-link:focus { left: 1rem; top: 1rem; }
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+.container {
+  width: min(1120px, 92%);
+  margin-inline: auto;
+}
+
+h1, h2, h3 { line-height: 1.2; margin: 0 0 10px; }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.5rem, 3.2vw, 2.25rem); font-weight: 800; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+
+p { margin: 0 0 1rem; color: var(--muted); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  border: 1px solid transparent;
+  padding: .85rem 1.15rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform .12s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue-700), var(--blue-500));
+  color: white;
+  box-shadow: var(--shadow);
+}
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-ghost {
+  background: transparent;
+  color: var(--blue-700);
+  border-color: var(--blue-100);
+}
+.btn-ghost:hover { background: var(--blue-100); }
+
+/* Header / Nav */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: saturate(1.2) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.nav { display: flex; align-items: center; justify-content: space-between; padding: .9rem 0; }
+.logo { font-weight: 800; color: var(--text); text-decoration: none; font-size: 1.2rem; }
+.logo span { color: var(--blue-700); }
+
+.nav-links { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+.nav-links a { color: var(--text); text-decoration: none; padding: .5rem .75rem; border-radius: 8px; }
+.nav-links a:hover { background: var(--blue-100); }
+
+.nav-toggle { display: none; background: transparent; border: 0; padding: .25rem; }
+.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text); margin: 5px 0; border-radius: 2px; }
+
+/* Hero */
+.hero {
+  position: relative;
+  background: radial-gradient(1200px 600px at 80% -20%, rgba(59,130,246,.25), transparent 60%),
+              linear-gradient(180deg, #fff, #f6f9ff 55%, #f4f8ff 100%);
+  padding: 5rem 0 4rem;
+}
+.hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 2rem; align-items: center; }
+.tagline { font-size: clamp(1.1rem, 2.4vw, 1.35rem); color: var(--blue-800); font-weight: 700; }
+.sub { max-width: 52ch; }
+.cta-group { display: flex; gap: .75rem; margin-top: 1rem; flex-wrap: wrap; }
+
+.hero-art { position: relative; min-height: 280px; }
+.blob { filter: drop-shadow(0 20px 50px rgba(37,99,235,.25)); }
+.dots {
+  position: absolute; inset: 0; background-image: radial-gradient(rgba(29,78,216,.2) 1px, transparent 1px);
+  background-size: 18px 18px; mask: radial-gradient(closest-side, #000 70%, transparent 71%);
+}
+
+/* Sections */
+.section { padding: 4rem 0; }
+.section-head { text-align: center; margin-bottom: 2rem; }
+.section-head p { max-width: 60ch; margin-inline: auto; }
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: 0 1px 0 rgba(15,23,42,.03);
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: rgba(37,99,235,.25); }
+.card .icon { font-size: 1.6rem; margin-bottom: .5rem; }
+
+/* Contact */
+.contact .form-field { display: grid; gap: .4rem; margin-bottom: 1rem; }
+.contact label { font-weight: 600; }
+.contact input, .contact textarea {
+  padding: .8rem .9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+}
+.contact input:focus, .contact textarea:focus { outline: 2px solid var(--blue-100); border-color: var(--blue-600); }
+.contact .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-actions { display: flex; gap: 1rem; align-items: center; }
+.error { color: #b91c1c; min-height: 1.2em; }
+#form-status { color: var(--blue-800); font-weight: 600; min-height: 1.2em; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--border); background: #fff; }
+.footer-grid { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 0; }
+.to-top { text-decoration: none; background: var(--blue-100); color: var(--blue-700); padding: .4rem .6rem; border-radius: 8px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .nav-links { position: absolute; right: 4%; top: 56px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: .5rem; display: none; flex-direction: column; width: 220px; box-shadow: var(--shadow); }
+  .nav-links.show { display: flex; }
+  .nav-toggle { display: inline-block; }
+  .cards { grid-template-columns: 1fr; }
+  .contact .grid-2 { grid-template-columns: 1fr; }
+}

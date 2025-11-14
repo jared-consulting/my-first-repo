@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jared Consulting — AI powered business consulting</title>
+    <meta name="description" content="Jared Consulting helps businesses leverage AI for strategy, automation, and analytics." />
+    <meta name="theme-color" content="#2563eb" />
+    <meta property="og:title" content="Jared Consulting — AI powered business consulting" />
+    <meta property="og:description" content="Pragmatic AI strategy, automation, and analytics to unlock growth." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jared Consulting — AI powered business consulting" />
+    <meta name="twitter:description" content="Pragmatic AI strategy, automation, and analytics to unlock growth." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <header class="site-header">
+      <nav class="container nav" aria-label="Primary navigation">
+        <a href="#hero" class="logo">Jared<span>Consulting</span></a>
+        <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="client_interview_generator.html">Questions</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <section id="hero" class="hero">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <h1>Jared</h1>
+            <p class="tagline">AI powered business consulting</p>
+            <p class="sub">I help leaders unlock growth with practical AI strategy, efficient automation, and data-driven decision making.</p>
+            <div class="cta-group">
+              <a href="#contact" class="btn btn-primary">Get in touch</a>
+              <a href="#services" class="btn btn-ghost">Explore services</a>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="blob">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1d4ed8" />
+                  <stop offset="100%" stop-color="#3b82f6" />
+                </linearGradient>
+              </defs>
+              <path fill="url(#g1)" d="M324 233.5q-9 33.5-39.5 63T205 337q-70 1-117.5-46.5T41 168q7-64 57-95.5T211 57q56 2 93.5 36.5T324 233.5Z"/>
+            </svg>
+            <div class="dots"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="services" class="section services">
+        <div class="container">
+          <header class="section-head">
+            <h2>Services</h2>
+            <p>Pragmatic, outcomes-focused solutions tailored to your business.</p>
+          </header>
+          <div class="cards">
+            <article class="card">
+              <div class="icon">⚙️</div>
+              <h3>AI Strategy & Roadmap</h3>
+              <p>Identify high-impact AI opportunities, build a clear roadmap, and de-risk adoption with pilots that deliver measurable value.</p>
+            </article>
+            <article class="card">
+              <div class="icon">🤖</div>
+              <h3>Process Automation</h3>
+              <p>Automate repetitive workflows to reduce cost and error—integrations, assistants, and internal tools that your team loves.</p>
+            </article>
+            <article class="card">
+              <div class="icon">📊</div>
+              <h3>Data & Analytics</h3>
+              <p>Turn data into decisions with clean pipelines, intuitive dashboards, and KPIs that align teams around outcomes.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div class="container">
+          <header class="section-head">
+            <h2>Contact</h2>
+            <p>Tell me about your goals. I’ll get back within one business day.</p>
+          </header>
+          <form id="contact-form" novalidate>
+            <div class="grid-2">
+              <div class="form-field">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" required placeholder="Your name" />
+                <small class="error" aria-live="polite"></small>
+              </div>
+              <div class="form-field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required placeholder="you@company.com" />
+                <small class="error" aria-live="polite"></small>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="6" required placeholder="What would you like to achieve?"></textarea>
+              <small class="error" aria-live="polite"></small>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Send message</button>
+              <p id="form-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <p>© <span id="year"></span> Jared Consulting. All rights reserved.</p>
+        <a class="to-top" href="#hero" aria-label="Back to top">↑</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

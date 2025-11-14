@@ -1,0 +1,28 @@
+{
+  "business_name": "Acme Retail Co",
+  "industry": "Retail",
+  "employees": 28,
+  "annual_revenue": 1750000,
+  "challenges": [
+    "Inconsistent inventory accuracy",
+    "Rising fulfillment costs",
+    "Limited customer insights"
+  ],
+  "executive_summary": "Acme Retail Co is positioned for growth with targeted improvements in inventory accuracy, omnichannel fulfillment efficiency, and customer analytics.",
+  "current_state": "Acme operates two brick-and-mortar stores with a growing e-commerce channel. Systems include a POS, spreadsheet-based inventory counts, and a basic email marketing platform.",
+  "findings": [
+    "Stock accuracy below 90% leads to lost sales and over-ordering",
+    "Order picking is manual with limited batching and routing",
+    "Customer data is siloed between in-store and online systems"
+  ],
+  "recommendations": [
+    "Implement cycle counting with ABC classification and barcode scanning",
+    "Introduce batch picking and standardized packing workflows",
+    "Consolidate customer data and build RFM segmentation"
+  ],
+  "next_steps": [
+    "Run a 4-week pilot for cycle counting in the top 20% SKUs",
+    "Document current fulfillment steps and measure baseline KPIs",
+    "Evaluate a lightweight CDP or data warehouse for unification"
+  ]
+}

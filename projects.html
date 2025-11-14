@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects — Jared Consulting</title>
+  <meta name="description" content="Manage consulting projects: list, details, forms, and dashboard." />
+  <meta name="theme-color" content="#2563eb" />
+  <meta property="og:title" content="Projects — Jared Consulting" />
+  <meta property="og:description" content="Dashboard, project list, details, and forms — all in your browser." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Projects — Jared Consulting" />
+  <meta name="twitter:description" content="Dashboard, project list, details, and forms — all in your browser." />
+  <link rel="stylesheet" href="projects.css" />
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <header class="site-header">
+    <nav class="container nav" aria-label="Primary navigation">
+      <a href="#/dashboard" class="logo">Jared<span>Consulting</span></a>
+      <ul class="nav-links">
+        <li><a href="#/dashboard">Dashboard</a></li>
+        <li><a href="#/projects">Projects</a></li>
+        <li><a href="#/new" class="btn btn-primary small">+ New Project</a></li>
+        <li><a href="index.html" class="btn btn-ghost small">Main Site</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="container" tabindex="-1">
+    <div id="app" class="app"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <p>© <span id="year"></span> Jared Consulting.</p>
+      <a class="to-top" href="#/dashboard" aria-label="Back to top">↑</a>
+    </div>
+  </footer>
+
+  <script src="projects.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report Generator — Jared Consulting</title>
+  <meta name="description" content="Generate consulting reports from JSON in your browser." />
+  <meta name="theme-color" content="#2563eb" />
+  <meta property="og:title" content="Report Generator — Jared Consulting" />
+  <meta property="og:description" content="Paste or upload JSON to produce a formatted consulting report (Markdown)." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Report Generator — Jared Consulting" />
+  <meta name="twitter:description" content="Paste or upload JSON to produce a formatted consulting report (Markdown)." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .wrap{padding:2rem 0}
+    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    textarea{width:100%;min-height:280px}
+    .monospace{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .actions{display:flex;gap:.6rem;flex-wrap:wrap}
+    pre{white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <header class="site-header">
+    <nav class="container nav" aria-label="Primary navigation">
+      <a href="index.html#hero" class="logo">Jared<span>Consulting</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="client_interview_generator.html">Questions</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="container wrap" tabindex="-1">
+    <div class="grid">
+      <section class="card">
+        <h2>Input JSON</h2>
+        <p class="helper">Paste JSON or upload a file.</p>
+        <div class="actions">
+          <input type="file" id="file" accept="application/json,.json" />
+          <button class="btn btn-ghost" id="loadSample">Load sample</button>
+        </div>
+        <textarea id="json" class="monospace" placeholder='{"business_name":"Acme", ...}'></textarea>
+        <div class="actions">
+          <button class="btn btn-primary" id="generate">Generate report</button>
+        </div>
+        <p id="error" class="error"></p>
+      </section>
+      <section class="card">
+        <h2>Markdown Output</h2>
+        <div class="actions">
+          <button class="btn btn-ghost" id="copy">Copy</button>
+          <button class="btn btn-ghost" id="download">Download .md</button>
+        </div>
+        <pre id="output" class="monospace"></pre>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <p>© <span id="year"></span> Jared Consulting.</p>
+      <a class="to-top" href="#" aria-label="Back to top">↑</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+
+    const textarea = document.getElementById('json');
+    const out = document.getElementById('output');
+    const err = document.getElementById('error');
+    const file = document.getElementById('file');
+
+    function formatCurrency(v){ const n = Number(v); return isFinite(n) ? new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}).format(n) : String(v); }
+    function listBlock(items){ if(!items || !items.length) return '- (none provided)'; return items.map(x=>`- ${String(x)}`).join('\n'); }
+    function buildMarkdown(data){
+      const name = data.business_name || data.name || '(Unnamed Business)';
+      const industry = data.industry || '(unspecified)';
+      const employees = data.employees ?? '(unspecified)';
+      const revenue = data.annual_revenue != null ? formatCurrency(data.annual_revenue) : '(unspecified)';
+      const challenges = data.challenges || [];
+      const executive_summary = data.executive_summary || 'This report summarizes the current state, key findings, and recommendations to help the organization achieve its goals.';
+      const current_state = data.current_state || data.current_state_analysis || 'Overview of processes, systems, and performance based on available information.';
+      const findings = data.findings || data.key_findings || [];
+      const recommendations = data.recommendations || [];
+      const next_steps = data.next_steps || [];
+
+      return [
+        `# Consulting Report — ${name}`,
+        '',
+        '## Executive Summary',
+        executive_summary,
+        '',
+        '## Business Profile',
+        `- Name: ${name}`,
+        `- Industry: ${industry}`,
+        `- Employees: ${employees}`,
+        `- Annual Revenue: ${revenue}`,
+        '',
+        '## Current State Analysis',
+        current_state,
+        '',
+        '## Key Findings',
+        listBlock(findings),
+        '',
+        '## Recommendations',
+        listBlock(recommendations),
+        '',
+        '## Next Steps',
+        listBlock(next_steps),
+        '',
+        '## Challenges to Address',
+        listBlock(challenges),
+        ''
+      ].join('\n');
+    }
+
+    document.getElementById('loadSample').addEventListener('click', async ()=>{
+      const res = await fetch('sample_business.json');
+      const data = await res.json();
+      textarea.value = JSON.stringify(data, null, 2);
+    });
+
+    file.addEventListener('change', async () => {
+      err.textContent = '';
+      const f = file.files[0]; if (!f) return;
+      try{
+        const text = await f.text();
+        JSON.parse(text); // validate
+        textarea.value = text;
+      }catch(e){ err.textContent = 'Invalid JSON file.'; }
+    });
+
+    document.getElementById('generate').addEventListener('click', ()=>{
+      err.textContent = ''; out.textContent = '';
+      let data;
+      try{ data = JSON.parse(textarea.value || '{}'); }
+      catch(e){ err.textContent = 'Invalid JSON. Please fix and try again.'; return; }
+      try{ out.textContent = buildMarkdown(data); }
+      catch(e){ err.textContent = 'Error generating report: ' + e.message; }
+    });
+
+    document.getElementById('copy').addEventListener('click', async ()=>{
+      if (!out.textContent) return;
+      try{ await navigator.clipboard.writeText(out.textContent); }
+      catch{
+        const ta = document.createElement('textarea'); ta.value = out.textContent; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      }
+    });
+
+    document.getElementById('download').addEventListener('click', ()=>{
+      if (!out.textContent) return;
+      const blob = new Blob([out.textContent], {type:'text/markdown'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'consulting_report.md';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+  </script>
+</body>
+</html>

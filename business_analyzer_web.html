@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Business Analyzer (Web) — Jared Consulting</title>
+  <meta name="description" content="Collect business info and generate JSON and a text report in your browser." />
+  <meta name="theme-color" content="#2563eb" />
+  <meta property="og:title" content="Business Analyzer (Web) — Jared Consulting" />
+  <meta property="og:description" content="Enter business details to produce a JSON file and a text report preview in the browser." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Business Analyzer (Web) — Jared Consulting" />
+  <meta name="twitter:description" content="Enter business details to produce a JSON file and a text report preview in the browser." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .wrap{padding:2rem 0}
+    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr; gap:1rem}
+    .field{display:grid;gap:.4rem}
+    .actions{display:flex;gap:.6rem;flex-wrap:wrap}
+    .summary{white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
+    .error{color:#b91c1c;min-height:1.2em}
+    .smallnote{color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <header class="site-header">
+    <nav class="container nav" aria-label="Primary navigation">
+      <a href="index.html#hero" class="logo">Jared<span>Consulting</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="client_interview_generator.html">Questions</a></li>
+        <li><a href="projects.html">Projects</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="container wrap" tabindex="-1">
+    <div class="grid">
+      <section class="card">
+        <h2>Business Information</h2>
+        <form id="form" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Business name</label>
+              <input id="name" name="name" type="text" required placeholder="e.g., Acme Corp" />
+              <small class="error" id="err-name"></small>
+            </div>
+            <div class="field">
+              <label for="industry">Industry</label>
+              <input id="industry" name="industry" type="text" required placeholder="e.g., Retail" />
+              <small class="error" id="err-industry"></small>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="employees">Number of employees</label>
+              <input id="employees" name="employees" type="number" min="0" step="1" required placeholder="e.g., 25" />
+              <small class="error" id="err-employees"></small>
+            </div>
+            <div class="field">
+              <label for="revenue">Annual revenue (USD)</label>
+              <input id="revenue" name="revenue" type="text" inputmode="numeric" placeholder="$1,250,000" />
+              <small class="error" id="err-revenue"></small>
+            </div>
+          </div>
+          <div class="field">
+            <label>Main challenges (up to 3)</label>
+            <input id="ch1" type="text" placeholder="Challenge 1" />
+            <input id="ch2" type="text" placeholder="Challenge 2" />
+            <input id="ch3" type="text" placeholder="Challenge 3" />
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Generate</button>
+            <span class="smallnote">Generates a JSON file and a text report preview.</span>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Summary & Report</h2>
+        <div class="actions">
+          <button class="btn btn-ghost" id="downloadJson">Download JSON</button>
+          <button class="btn btn-ghost" id="downloadReport">Download report.txt</button>
+          <button class="btn btn-ghost" id="copySummary">Copy summary</button>
+        </div>
+        <pre class="summary" id="summary"></pre>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <p>© <span id="year"></span> Jared Consulting.</p>
+      <a class="to-top" href="#" aria-label="Back to top">↑</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+
+    const $ = (id)=> document.getElementById(id);
+    const err = (id, msg)=> { $(id).textContent = msg || ''; };
+
+    function sanitizeFilename(name){
+      if(!name) return 'business';
+      return String(name).trim().replace(/\s+/g,'_').replace(/[^A-Za-z0-9_-]/g,'') || 'business';
+    }
+    function parseIntSafe(v){
+      const n = parseInt(String(v||'').replace(/,/g,''), 10);
+      if (!Number.isFinite(n) || n < 0) throw new Error('Employees must be a non-negative integer.');
+      return n;
+    }
+    function parseFloatSafe(v){
+      const n = parseFloat(String(v||'').replace(/[$,]/g,''));
+      if (!Number.isFinite(n) || n < 0) throw new Error('Revenue must be a non-negative number.');
+      return n;
+    }
+    function summaryText(data){
+      const ch = (data.challenges||[]).length ? data.challenges.join('; ') : 'None provided';
+      const rev = Number.isFinite(data.annual_revenue) ? new Intl.NumberFormat(undefined,{style:'currency',currency:'USD'}).format(data.annual_revenue) : '(unspecified)';
+      return [
+        '=== Business Summary ===',
+        `Name: ${data.business_name}`,
+        `Industry: ${data.industry}`,
+        `Employees: ${data.employees}`,
+        `Annual Revenue: ${rev}`,
+        `Main Challenges: ${ch}`
+      ].join('\n');
+    }
+    function reportText(data){
+      const chBlock = (data.challenges||[]).length ? data.challenges.map(c=>`- ${c}`).join('\n') : '- None provided';
+      const rev = Number.isFinite(data.annual_revenue) ? new Intl.NumberFormat(undefined,{style:'currency',currency:'USD', maximumFractionDigits:2}).format(data.annual_revenue) : '(unspecified)';
+      return [
+        'Jared Consulting — Business Analysis',
+        '====================================',
+        '',
+        'Business Profile',
+        '----------------',
+        `- Name: ${data.business_name}`,
+        `- Industry: ${data.industry}`,
+        `- Employees: ${data.employees}`,
+        '',
+        'Key Metrics',
+        '-----------',
+        `- Annual Revenue: ${rev}`,
+        '',
+        'Challenges to Address',
+        '---------------------',
+        chBlock,
+        ''
+      ].join('\n');
+    }
+
+    const form = $('form');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      // clear errors
+      err('err-name',''); err('err-industry',''); err('err-employees',''); err('err-revenue','');
+
+      const name = $('name').value.trim();
+      const industry = $('industry').value.trim();
+      const employeesRaw = $('employees').value.trim();
+      const revenueRaw = $('revenue').value.trim();
+      const challenges = [ $('ch1').value.trim(), $('ch2').value.trim(), $('ch3').value.trim() ].filter(Boolean);
+
+      let ok = true; let employees = 0; let revenue = null;
+      if (!name){ err('err-name','Please enter the business name.'); ok = false; }
+      if (!industry){ err('err-industry','Please enter the industry.'); ok = false; }
+      try { employees = parseIntSafe(employeesRaw); } catch(e){ err('err-employees', e.message); ok = false; }
+      if (revenueRaw){ try { revenue = parseFloatSafe(revenueRaw); } catch(e){ err('err-revenue', e.message); ok = false; } }
+      if (!ok) return;
+
+      const data = {
+        business_name: name,
+        industry,
+        employees,
+        annual_revenue: revenue !== null ? revenue : undefined,
+        challenges,
+      };
+
+      $('summary').textContent = summaryText(data) + '\n\n' + reportText(data);
+
+      // expose for download buttons
+      window.__latestData = data;
+    });
+
+    $('downloadJson').addEventListener('click', ()=>{
+      const d = window.__latestData; if (!d) return;
+      const base = sanitizeFilename(d.business_name);
+      const blob = new Blob([JSON.stringify(d, null, 2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = base + '.json'; a.click(); URL.revokeObjectURL(a.href);
+    });
+
+    $('downloadReport').addEventListener('click', ()=>{
+      const d = window.__latestData; if (!d) return;
+      const base = sanitizeFilename(d.business_name);
+      const blob = new Blob([reportText(d)], {type:'text/plain'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = base + '_report.txt'; a.click(); URL.revokeObjectURL(a.href);
+    });
+
+    $('copySummary').addEventListener('click', async ()=>{
+      const t = $('summary').textContent || ''; if (!t) return;
+      try { await navigator.clipboard.writeText(t); } catch {
+        const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      }
+    });
+  </script>
+</body>
+</html>
