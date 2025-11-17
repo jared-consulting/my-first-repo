@@ -1,0 +1,22 @@
+{
+  "business_name": "Acme Retail Co",
+  "owner_name": "Jane Doe",
+  "email": "jane@example.com",
+  "phone": "987654321",
+  "industry": "Retail",
+  "employees": 25,
+  "years_in_business": 5,
+  "revenue_range": "500k - 1M",
+  "challenges": [
+    "Low foot traffic",
+    "high operating costs",
+    "inventory issues"
+  ],
+  "goals": [
+    "grow online sales",
+    "improve margins",
+    "open 2nd location"
+  ],
+  "created_at": "2025-11-16T07:30:54.017472Z",
+  "slug": "acme-retail-co"
+}
